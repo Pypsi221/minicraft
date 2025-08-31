@@ -19,10 +19,29 @@ class MapManager:
         self.land.removeNode()
         self.add_land_node()
         
-
-    def add_block(self, position:tuple):
+    def set_color(self, z:int):
+        if z <= 3:
+            return self.colors[z]
+        else:
+            return self.colors[0]
+    
+    def add_block(self, position:int):
         self.block = loader.loadModel(self.model)
         self.block.setTexture(loader.loadTexture(self.texture))
-        self.block.setColor(self.colors[0])
+        color = self.set_color(position[2])
+        self.block.setColor(color)
         self.block.setPos(position)
         self.block.reparentTo(self.land)
+
+    def load_map(self,filename):
+        with open(filename) as file:
+            y = 0
+            for line in file:
+                x = 0
+                line_lst = line.split(" ")
+                for z in line_lst:
+                    for z0 in range(int(z) + 1):
+                        block = self.add_block((x,y, z0))
+                    x += 1
+                y += 1
+        return x, y
