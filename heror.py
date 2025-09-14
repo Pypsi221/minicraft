@@ -36,17 +36,20 @@ class Hero:
     def turn_right(self):
         self.hero.setH(self.hero.getH() - 5 % 360) 
         
-    def move_to(self):
+    def move_to(self, angle):
         """"обираємо як рухати гравця в залежності від напрямку""" 
         if self.game_mode:
-            self.just_move_move()
+            self.just_move(angle)
         else:
-            self.trine_move()
-    def just_move(self):
+            self.try_move(angle)
+    def just_move(self,angle):
         """"рухаємо гравця вперед""" 
-        pass  
+        pos = self.look_at(angle)
+        self.hero.setPos(pos)
+        
+        
     
-    def trine_move(self):
+    def try_move(self):
         """"рухаємо гравця по ігровому режиму""" 
         pass    
         
@@ -86,6 +89,42 @@ class Hero:
            return -1, -1
        else:
            return 0, -1
+       
+    def look_at(self,angle):
+        x = round(self.hero.getX())
+        y = round(self.hero.getY())
+        z = round(self.hero.getZ())
+        
+        dx, dy = self.check_dir(angle)
+        
+        return (x + dx, y + dy, z)
+    
+    def forward(self):
+        angle = self.hero.getH() % 360
+        self.move_to(angle)
+        
+    def left(self):
+        angle = (self.hero.getH() + 90) % 360
+        self.move_to(angle)
+   
+    def right(self):
+        angle = (self.hero.getH() - 90) % 360
+        self.move_to(angle)
+        
+    def back(self):
+        angle = (self.hero.getH() + 180) % 360
+        self.move_to(angle)
+        
+        
+    def up(self):
+        self.hero.setZ(self.hero.getZ() + 1)
+        
+    def down(self):
+        if self.game_mode:
+            self.hero.setZ(self.hero.getZ() - 1)
+         
+        
+        
         
     def accept_events(self):
         base.accept('c', self.switch_camera)
@@ -93,3 +132,18 @@ class Hero:
         base.accept('a''-repeat', self.turn_left)
         base.accept('d', self.turn_right)
         base.accept('d''-repeat', self.turn_right)
+        base.accept('w', self.forward)
+        base.accept('w''-repeat', self.forward) 
+        base.accept('s', self.back)
+        base.accept('s''-repeat', self.back)
+        base.accept('q', self.left)
+        base.accept('q''-repeat', self.left)  
+        base.accept('e', self.right)
+        base.accept('e''-repeat', self.right)
+        base.accept('r', self.up)
+        base.accept('r''-repeat', self.up)
+        base.accept('f', self.down)
+        base.accept('f''-repeat', self.down)
+        
+          
+        
