@@ -31,6 +31,7 @@ class MapManager:
         color = self.set_color(position[2])
         self.block.setColor(color)
         self.block.setPos(position)
+        self.block.setTag("att",str(position))
         self.block.reparentTo(self.land)
 
     def load_map(self,filename):
@@ -45,3 +46,33 @@ class MapManager:
                     x += 1
                 y += 1
         return x, y
+    
+    def find_block(self, pos):
+        """шукаємо блок по позиції"""
+        return self.find_block("=at=" + str(pos))
+
+    def is_empty(self, pos):
+        """перевіряємо чи є блок на позиції"""
+        if self.find_block(pos):
+            return False
+        else:
+            return True
+        
+    def find_highest(self, position):
+        """шукаємо найвищий блок на позиції (x,y)"""
+        x,y,z = pos
+        z = 1 
+        while not self.is_empty((x,y,z)):
+            z += 1
+        return (x,y,z)
+    
+    def build_block(self, position):
+        """будуємо блок на позиції"""
+        pass
+      
+    def desteroy_block(self, pos):
+        """видаляємо блок на позиції"""
+        bloks = self.find_block(pos)
+        for blok in bloks:
+            blok.removeNode()
+    

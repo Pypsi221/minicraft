@@ -30,6 +30,12 @@ class Hero:
         else:
             self.camera_bind()
             
+    def change_mode(self):
+        if self.game_mode:
+            self.game_mode = False  
+        else:
+            self.game_mode = True
+            
     def turn_left(self):
         self.hero.setH(self.hero.getH() + 5 % 360)
         
@@ -49,10 +55,17 @@ class Hero:
         
         
     
-    def try_move(self):
+    def try_move(self,angle):
         """"рухаємо гравця по ігровому режиму""" 
-        pass    
-        
+        pos = self.look_at(angle)
+        if self.look_at(angle):
+            if self.land.is_empty(pos):
+                pos = self.land.find_highest(pos)
+                self.hero.setPos(pos)
+        else:
+            pos = pos[0], pos[1], pos[2] + 1
+            if self.land.is_empty(pos):
+                self.hero.setPos(pos)
         
     def check_dir(self, angle):
        ''' повертає заокруглені зміни координат X, Y,
@@ -123,7 +136,23 @@ class Hero:
         if self.game_mode:
             self.hero.setZ(self.hero.getZ() - 1)
          
-        
+    def build(self):
+        angle = self.hero.getH() % 360
+        pos = self.look_at(angle)
+        if self.game_mode:
+            self.land.add_block(pos)
+        else:
+            self.land.build_block(pos)
+            
+    def destroy(self):
+        angle = self.hero.getH() % 360
+        pos = self.look_at(angle)
+        if self.game_mode:
+            self.land.add_block(pos)
+        else:
+            self.land.del_block(pos)
+       
+
         
         
     def accept_events(self):
@@ -144,6 +173,12 @@ class Hero:
         base.accept('r''-repeat', self.up)
         base.accept('f', self.down)
         base.accept('f''-repeat', self.down)
+        base.accept('z', self.change_mode)
+        base.accept('z''-repeat', self.change_mode)
+        base.accept('mouse1', self.build)
+        base.accept('v', self.destroy)
+        base.accept('mouse1''-repeat', self.build)
+        base.accept('v' + '-repeat', self.destroy)
         
           
         
