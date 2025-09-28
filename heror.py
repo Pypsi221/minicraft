@@ -148,9 +148,9 @@ class Hero:
         angle = self.hero.getH() % 360
         pos = self.look_at(angle)
         if self.game_mode:
-            self.land.add_block(pos)
+            self.land.destroy_block(pos)
         else:
-            self.land.del_block(pos)
+            self.land.del_block_from(pos)
        
 
         
@@ -177,8 +177,7 @@ class Hero:
         base.accept('z''-repeat', self.change_mode)
         base.accept('mouse1', self.build)
         base.accept('v', self.destroy)
-        base.accept('mouse1''-repeat', self.build)
+        base.accept('mouse1'+ '-repeat', self.build)
         base.accept('v' + '-repeat', self.destroy)
-        
-          
-        
+        base.accept('l', self.land.load_map_from_fille)
+        base.accept('k', self.land.save_map)

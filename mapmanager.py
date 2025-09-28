@@ -1,4 +1,8 @@
+import pickle
+
+
 class MapManager:
+    
     def __init__(self):
         self.model = 'models/block.egg'
         self.texture = 'textures/brick.png'
@@ -47,9 +51,9 @@ class MapManager:
                 y += 1
         return x, y
     
-    def find_block(self, pos):
+    def find_blocks(self, pos):
         """шукаємо блок по позиції"""
-        return self.find_block("=at=" + str(pos))
+        return self.land.findAllMathes("=at=" + str(pos))
 
     def is_empty(self, pos):
         """перевіряємо чи є блок на позиції"""
@@ -58,7 +62,7 @@ class MapManager:
         else:
             return True
         
-    def find_highest(self, position):
+    def find_highest(self, pos):
         """шукаємо найвищий блок на позиції (x,y)"""
         x,y,z = pos
         z = 1 
@@ -66,13 +70,43 @@ class MapManager:
             z += 1
         return (x,y,z)
     
-    def build_block(self, position):
+    def build_block(self, pos):
         """будуємо блок на позиції"""
-        pass
-      
-    def desteroy_block(self, pos):
+        x, y, z = pos
+        new = self.find_highest_empty(pos)
+        if new[2] <= z + 1:
+            self.add_block(new)
+                 
+    def destroy_block(self, pos):
         """видаляємо блок на позиції"""
         bloks = self.find_block(pos)
         for blok in bloks:
             blok.removeNode()
+            
+    def del_block_from(self,pos):
+        """видаляємо блок на позиції"""
+        x,y,z = self.find_highest(pos)
+        pos = x,y,z-1
+        bloks = self.find_block(pos)
+        for blok in bloks:
+            blok.removeNode()
+            
+    def save_map(self):
+        blocks = self.land.getChildren()
+        with open('maps/land3.txt', 'wb') as file:
+            pickle.dump(len(blocks), file)
+            for block in blocks:
+                x,y,z = block.getPos()
+                pos = (int(x), int(y), int(z))
+                pickle.dump(pos, file)
+                
+    def load_map_from_fille(self ):
+        with open('maps/land3.txt', 'rb') as file:
+            lenght = pickle.load(file)
+            for i in range(lenght):
+                pos = pickle.load(file)
+                self.add_block(pos)
+                      
+                
+            
     
