@@ -5,7 +5,7 @@ class MapManager:
     
     def __init__(self):
         self.model = 'models/block.egg'
-        self.texture = 'textures/brick.png'
+        self.texture = 'textures/692dbf5b5684d6c67b8effefd8513a8d.jpg'
         self.colors = [
             (132, 195, 204, 1),
             (202, 59, 253,1),

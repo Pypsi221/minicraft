@@ -9,6 +9,10 @@ class Hero:
             self.hero.setPos(position)
             self.hero.reparentTo(render)
             
+            self.damage_shd = base.loader.loadSfx("sounds/podcast-interview-intro-music-397245.mp3")
+            self.build_shd = base.loader.loadSfx("sounds/build.ogg")
+            self.up_shd = base.loader.loadSfx("sounds/up.mp3")
+            
             self.camera_bind()
             self.accept_events()    
     def camera_bind(self):
@@ -143,6 +147,7 @@ class Hero:
             self.land.add_block(pos)
         else:
             self.land.build_block(pos)
+            self.build_shd.play()
             
     def destroy(self):
         angle = self.hero.getH() % 360
